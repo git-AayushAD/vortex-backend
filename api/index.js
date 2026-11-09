@@ -1,44 +1,69 @@
 const express = require('express');
 const cors = require('cors');
 const Razorpay = require('razorpay');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
 app.use(cors({ origin: '*' })); 
 app.use(express.json());
 
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("MongoDB Connected Successfully!"))
+    .catch(err => console.error("MongoDB Connection Failed:", err));
+
+// Define what a student's data looks like
+const RegistrationSchema = new mongoose.Schema({
+    name: String,
+    phone: String,
+    email: String,
+    college: String,
+    year: String,
+    collegeId: String,
+    cart: Array,
+    billing: Object,
+    paymentStatus: { type: String, default: "Pending" }, // Will update to Paid later
+    createdAt: { type: Date, default: Date.now }
+});
+
+const Registration = mongoose.model('Registration', RegistrationSchema);
+
 // Initialize Razorpay
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
+    key_id: process.env.rzp_test_Ty6feL7TwmtMIm,
+    key_secret: process.env.tCrhnjc1i5ic33p3h0TyAPqY
 });
 
-// NEW: Visual Health Check Route
-app.get('/', (req, res) => {
-    res.status(200).send("Vortex Backend is Live and Running! 🚀");
-});
-app.get('/api/test', (req, res) => {
-    res.status(200).send("API routing is working perfectly! ✅");
-});
+// Health Checks
+app.get('/', (req, res) => res.status(200).send("Vortex Backend is Live and Running! 🚀"));
+app.get('/api/test', (req, res) => res.status(200).send("API routing is working perfectly! ✅"));
 
-// 1. Existing Registration Route (Saves their details)
+// 1. Registration Route (Now actually saves to MongoDB)
 app.post('/api/register', async (req, res) => {
     try {
         const data = req.body;
-        console.log(`Registration attempt: ${data.name}`);
-        // Later, we will save this to a database (MongoDB/Firebase)
-        res.status(200).json({ success: true, message: "Data received" });
+        console.log(`Saving Registration for: ${data.name}`);
+        
+        // Save entry to database
+        const newStudent = new Registration(data);
+        const savedStudent = await newStudent.save();
+
+        res.status(200).json({ 
+            success: true, 
+            message: "Student saved to DB",
+            studentId: savedStudent._id 
+        });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server Error" });
+        console.error("DB Save Error:", error);
+        res.status(500).json({ success: false, message: "Server Error saving to DB" });
     }
 });
 
-// 2. NEW: Razorpay Order Creation Route
+// 2. Razorpay Order Creation Route
 app.post('/api/create-order', async (req, res) => {
     try {
         const { amount } = req.body;
-        
-        // Razorpay expects the amount in PAISE (₹1 = 100 paise)
         const options = {
             amount: Math.round(amount * 100), 
             currency: "INR",
@@ -47,7 +72,6 @@ app.post('/api/create-order', async (req, res) => {
 
         const order = await razorpay.orders.create(options);
         res.status(200).json({ success: true, order });
-
     } catch (error) {
         console.error("Razorpay Error:", error);
         res.status(500).json({ success: false, message: "Failed to create order" });
