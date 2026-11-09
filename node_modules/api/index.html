@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vortex 14.0 | Asia's Largest Chem-Fest</title>
+    
+    <meta name="description" content="Welcome to Vortex 14.0, Asia's largest Chem-Fest at ICT Mumbai. Explore 15+ events merging chemical engineering, pharma, and business.">
+    <meta name="keywords" content="Vortex 14.0, ICT Mumbai, Chem-Fest, Chemical Engineering, Pharma Fest, Upbiz, Advent, Tech Fest Mumbai">
+    <meta name="author" content="ICT Mumbai">
+    <meta name="robots" content="index, follow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    
+    <link rel="preload" href="photos/vortex_D.png" as="image" fetchpriority="high" />
+    <link rel="preload" href="./css/index.css" as="style" />
+    <link rel="preload" href="./css/fx.css" as="style" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/fx.css" />
+
+    <link rel="modulepreload" href="./scripts/index.js" />
+    <link rel="modulepreload" href="./data/eventsData.js" />
+
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@400;500;700;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@400;500;700;900&display=swap" /></noscript>
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+
+    <link rel="icon" type="image/x-icon" href="photos/favicon.ico">
+    <link rel="icon" type="image/png" sizes="48x48" href="photos/favicon-48x48.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="photos/apple-touch-icon.png">
+
+    <style>
+      html[data-theme="light"] * { text-shadow: none !important; }
+      html[data-theme="light"] .nav-logo img { filter: none !important; box-shadow: none !important; }
+      
+      .icon-btn, .menu-btn { position: relative; }
+      .icon-btn::after, .menu-btn::after {
+        content: ""; position: absolute; top: -15px; right: -15px; bottom: -15px; left: -15px;
+      }
+
+      .ambient-bg { contain: strict; pointer-events: none; }
+      .node-tip { pointer-events: none; will-change: left, top, opacity; contain: layout style; }
+      .series-section, .faq-item { content-visibility: auto; contain-intrinsic-size: auto 300px; }
+    </style>
+    
+    <script src="./scripts/fx.js" defer></script>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <a href="#home" class="nav-logo" data-target="home">
+        <img src="photos/vortex_L.png" alt="Vortex 14.0" class="logo-light" width="378" height="87" loading="lazy" decoding="async" />
+        <img src="photos/vortex_D.png" alt="Vortex 14.0" class="logo-dark" width="378" height="87" fetchpriority="high" decoding="async" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="#home" class="nav-tab active" data-target="home">Home</a></li>
+        <li><a href="#events" class="nav-tab" data-target="events">Events</a></li>
+        <li><a href="#faq" class="nav-tab" data-target="faq">FAQ</a></li>
+        <li><a href="about.html" data-target="about">About</a></li>
+      </ul>
+      <div class="nav-controls">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Theme">
+          <i class="fa-solid fa-sun" id="themeIcon" aria-hidden="true"></i>
+        </button>
+        <button class="icon-btn" id="cartToggleBtn" aria-label="Open Cart">
+          <i class="fa-solid fa-cart-shopping"></i><span class="cart-badge" id="cartCount">0</span>
+        </button>
+        <button class="menu-btn" id="menuToggleBtn" aria-label="Toggle Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- REGISTRATION MARQUEE -->
+    <div class="marquee-container">
+      <div class="marquee-text">
+        🚨 REGISTRATIONS FOR VORTEX 14.0 WILL START FROM 18TH NOVEMBER! BUILD YOUR CART AND SAVE YOUR SPOTS! 🚨
+      </div>
+    </div>
+
+    <div class="ambient-bg" aria-hidden="true">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="electrons-container">
+        <div class="electron e-1"></div>
+        <div class="electron e-2"></div>
+        <div class="electron e-3"></div>
+      </div>
+    </div>
+
+    <!-- CART SIDEBAR -->
+    <div class="cart-sidebar" id="cartSidebar">
+      <div class="cart-header">
+        <h3 class="font-heading" style="font-size: 1rem">Your Cart</h3>
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <button id="emptyCartBtn" style="background: none; border: none; color: #ff4757; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; transition: color 0.2s;">
+            <i class="fa-solid fa-trash-can"></i> Clear
+          </button>
+          <button class="close-cart" id="closeCartBtn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <div class="cart-items" id="cartItemsList">
+        <p style="color: var(--text-muted); text-align: center; margin-top: 2rem">Cart is empty.</p>
+      </div>
+      <div class="cart-summary">
+        <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+        <div class="summary-row discount" id="discountContainer">
+          <span id="discountLabel">Discount (0%)</span><span id="cartDiscount">-₹0</span>
+        </div>
+        <div class="summary-row total"><span>Total</span><span id="cartTotal">₹0</span></div>
+        <p class="discount-msg" id="discountMsg">Add more events to unlock series discounts!</p>
+        
+        <!-- Hidden Checkout Button & Replacement Message -->
+        <button class="checkout-btn" style="display: none !important;" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+        <div style="text-align: center; margin-top: 15px; padding: 12px; border-radius: 8px; background: rgba(189, 0, 255, 0.1); border: 1px dashed var(--primary-purple); font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: var(--primary-cyan); font-weight: 700;">
+          CHECKOUT OPENS NOV 18
+        </div>
+      </div>
+    </div>
+
+    <main class="main-container">
+      <section id="home" class="tab-content active hero-section">
+        <div class="hero-text">
+          <h1 class="font-heading">Welcome to VORTEX <span class="gradient-text">14.0</span></h1>
+          <p>Asia's Largest Chem-Fest organized by the Institute of Chemical Technology (ICT), Mumbai. Where Chemical Engineering, Pharma, and Futuristic Technology converge into a single dimension of innovation.</p>
+          <a href="#events" class="action-btn btn-info" style="font-size: 1rem; padding: 12px 30px; display: inline-block; text-decoration: none;">Explore Events</a>
+        </div>
+        
+        <div class="hero-3d">
+          <svg viewBox="0 0 400 400" class="vortex-pie">
+            <g class="spin-cw-slow">
+              <circle cx="200" cy="200" r="160" fill="none" stroke="#ffffff" stroke-width="15" stroke-dasharray="260.3 1005.3" stroke-dashoffset="-614.3" />
+              <circle cx="200" cy="200" r="160" fill="none" stroke="#ffffff" stroke-width="15" stroke-dasharray="251.3 1005.3" stroke-dashoffset="-893.6" />
+              <circle cx="200" cy="200" r="160" fill="none" stroke="#ffffff" stroke-width="15" stroke-dasharray="195.4 1005.3" stroke-dashoffset="-167.5" />
+              <circle cx="200" cy="200" r="160" fill="none" stroke="#45aaf2" stroke-width="15" stroke-dasharray="167.5 1005.3" stroke-dashoffset="-404.9" />
+            </g>
+            <g class="spin-ccw-med">
+              <circle cx="200" cy="200" r="135" fill="none" stroke="#ffd93d" stroke-width="15" stroke-dasharray="329.8 848.2" stroke-dashoffset="-141.3" />
+              <circle cx="200" cy="200" r="135" fill="none" stroke="#ffd93d" stroke-width="15" stroke-dasharray="106.0 848.2" stroke-dashoffset="-506.5" />
+              <circle cx="200" cy="200" r="135" fill="none" stroke="#45aaf2" stroke-width="15" stroke-dasharray="212.0 848.2" stroke-dashoffset="-659.7" />
+            </g>
+            <g class="spin-cw-fast">
+              <circle cx="200" cy="200" r="110" fill="none" stroke="#ff5a4d" stroke-width="15" stroke-dasharray="383.9 691.1" stroke-dashoffset="-326.3" />
+              <circle cx="200" cy="200" r="110" fill="none" stroke="#ff5a4d" stroke-width="15" stroke-dasharray="172.7 691.1" stroke-dashoffset="-86.3" />
+            </g>
+            <g class="spin-ccw-slow center-pie-group">
+              <path class="pie-slice" fill="#ffd93d" color="#ffd93d" d="M200 200 L158.431 176 A48 48 0 0 1 241.569 176 Z" style="--gx: 0px; --gy: -2px; --hx: 0px; --hy: -7px" data-title="Events" data-text="Explore all events" data-target="events" />
+              <path class="pie-slice" fill="#ff5a4d" color="#ff5a4d" d="M200 200 L241.569 176 A48 48 0 0 1 200 248 Z" style="--gx: 1.73px; --gy: 1px; --hx: 6.06px; --hy: 3.5px" data-title="FAQ" data-text="Your questions answered" data-target="faq" />
+              <a href="about.html" aria-label="About Vortex 14.0">
+                <path class="pie-slice" fill="#45aaf2" color="#45aaf2" d="M200 200 L200 248 A48 48 0 0 1 158.431 176 Z" style="--gx: -1.73px; --gy: 1px; --hx: -6.06px; --hy: 3.5px" data-title="About" data-text="About Vortex 14.0" />
+              </a>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <section id="events" class="tab-content">
+        <div style="padding-top: 2rem">
+          <section class="series-section">
+            <h2 class="series-title"><span style="color: var(--primary-cyan)">01.</span> General Series</h2>
+            <div class="events-grid" id="grid-general"></div>
+          </section>
+          <section class="series-section">
+            <h2 class="series-title"><span style="color: var(--primary-purple)">02.</span> Prodigy Series</h2>
+            <div class="events-grid" id="grid-prodigy"></div>
+          </section>
+          <section class="series-section">
+            <h2 class="series-title"><span class="gradient-text">03.</span> Pharma Series</h2>
+            <div class="events-grid" id="grid-pharma"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="faq" class="tab-content text-section">
+        <h2 class="font-heading" style="margin-bottom: 2rem">Frequently Asked <span class="gradient-text">Questions</span></h2>
+        <div class="faq-grid">
+          <details class="faq-item">
+            <summary class="faq-question">
+              <h3>Who can participate in Vortex 14.0?</h3>
+              <i class="fa-solid fa-chevron-down faq-arrow" aria-hidden="true"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Students from any recognized college or university can participate. Some events may have specific prerequisites outlined in their details sections.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <h3>Why should I participate in Vortex?</h3>
+              <i class="fa-solid fa-chevron-down faq-arrow" aria-hidden="true"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>College life goes beyond academics—it’s about experiences, connections, and challenges. Vortex offers a platform to showcase your talent, compete with students from other colleges, explore opportunities, and create lasting memories.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <h3>When is the event?</h3>
+              <i class="fa-solid fa-chevron-down faq-arrow" aria-hidden="true"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>The tentative dates for the event are 18-24 December. Please check back for updates.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <h3>Want a glimpse of all events and their format?</h3>
+              <i class="fa-solid fa-chevron-down faq-arrow" aria-hidden="true"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Looking for past questions and event formats to prepare better? <a href="https://drive.google.com/drive/folders/1YdbBIyqhUcGPqMjZfFMcA-lcPseLDPGb?usp=drive_link" target="_blank" rel="noopener noreferrer" aria-label="Access Vortex 14.0 Resources on Google Drive"><i class="icon-drive" aria-hidden="true"></i> Access past questions and event resources</a> to get valuable insights into what to expect!</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <h3>What are some of the must-try events?</h3>
+              <i class="fa-solid fa-chevron-down faq-arrow" aria-hidden="true"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Senior IDP (Industry-Defined Problem): Our flagship event where participants solve real industry challenges. It's perfect for those looking to apply their knowledge to practical problems.
+              
+              Chemflow: A challenging chemical engineering problem-solving competition that tests your technical prowess.
+              
+              Papyrus: A unique research paper presentation event for showcasing innovative ideas.
+              
+              Ignite: An exciting quiz competition testing your chemical engineering knowledge.
+              
+              Blueprint: A plant design competition where creativity meets engineering precision.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <h3>Can I participate in multiple events?</h3>
+              <i class="fa-solid fa-chevron-down faq-arrow" aria-hidden="true"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Yes! You can participate in as many events as you like across different series. In fact, participating in more events can unlock bigger discounts. You can select events from Prodigy, General, and Pharma series. However, note that you can only select either Sr. IDP or Sr. IDP Multi-Problem, not both.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <h3>What is the difference between Sr. IDP and Sr. IDP Multi-Problem?</h3>
+              <i class="fa-solid fa-chevron-down faq-arrow" aria-hidden="true"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Sr. IDP: Register for one problem statement at ₹800.
+              
+              Sr. IDP Multi-Problem: Register for two or three problem statements at ₹1600.
+              
+              Both options give you access to the flagship Industry-Defined Problem event. You cannot select both options - choose based on how many problem statements you want to tackle.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <h3>Do I need to be from ICT Mumbai to participate?</h3>
+              <i class="fa-solid fa-chevron-down faq-arrow" aria-hidden="true"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>No! Vortex is open to students from all colleges and universities. We welcome chemical engineering enthusiasts, undergraduate, postgraduate, and PhD students from across India to participate in our events. All you need is a valid college ID.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <h3>What are the different series available?</h3>
+              <i class="fa-solid fa-chevron-down faq-arrow" aria-hidden="true"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Prodigy Series: Advanced events for chemical engineering enthusiasts including Sr. IDP, Chemflow, Papyrus, Codathon, and Jr. IDP.
+              
+              General Series: Perfect for all chemistry lovers with events like Ignite, Advent, SDP, Ultimate Detectives, and UpBiz.
+              
+              Pharma Series: Explore the pharmaceutical world through Blueprint, Cosmecure, Gene Auction, Pharmaquest, and Moot Court.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-col brand">
+          <h3>Vortex Events</h3>
+          <p>ICT Mumbai's Premier Chemical Engineering Fest</p>
+          <p style="margin-top: 1rem; font-size: 0.8rem">Theme : EquiNexus</p>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <a href="#events">Events</a>
+          <a href="#faq">FAQ</a>
+          <a href="about.html">About Us</a>
+        </div>
+        <div class="footer-col">
+          <h3>Contact</h3>
+          <p><i class="fa-regular fa-envelope" aria-hidden="true"></i> vortexsecretary.ta@ug.ictmumbai.edu.in</p>
+          <div class="contact-details">
+            <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.5rem;">Secretary Contact Details:</p>
+            <p><i class="fa-solid fa-phone" aria-hidden="true"></i> Kshitij Joshi: 9763172716</p>
+            <p><i class="fa-solid fa-phone" aria-hidden="true"></i> Rupak Humad: 9967952108</p>
+            <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ICT Mumbai, Matunga, Mumbai - 400019</p>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Connect</h3>
+          <div class="social-links">
+            <a href="https://www.instagram.com/vortex_ict?cplk=MXExc2M3ZTZqZWhlOA==" aria-label="Visit Vortex 14.0 on Instagram">
+              <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div class="node-tip" id="nodeTip"><strong></strong><span></span></div>
+    
+    <script type="module" src="./scripts/index.js"></script>
+
+    <script>
+      const tabs = document.querySelectorAll('.nav-tab');
+      const sections = document.querySelectorAll('.tab-content');
+
+      function syncTabWithHash(isInitialLoad = false) {
+        const hash = window.location.hash || '#home';
+        let targetTab = 'home';
+        let scrollTargetId = null;
+
+        if (hash === '#events' || hash === '#grid-general' || hash === '#grid-prodigy' || hash === '#grid-pharma') {
+          targetTab = 'events';
+          if (hash !== '#events') {
+            scrollTargetId = hash.substring(1);
+          }
+        } else if (hash === '#faq') {
+          targetTab = 'faq';
+        }
+
+        requestAnimationFrame(() => {
+          tabs.forEach(tab => {
+            tab.classList.toggle('active', tab.getAttribute('data-target') === targetTab);
+          });
+
+          sections.forEach(sec => {
+            sec.classList.toggle('active', sec.id === targetTab);
+          });
+
+          if (scrollTargetId) {
+            requestAnimationFrame(() => {
+              const el = document.getElementById(scrollTargetId);
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            });
+          } else if (!isInitialLoad) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      }
+
+      window.addEventListener('hashchange', () => syncTabWithHash(false), { passive: true });
+      window.addEventListener('DOMContentLoaded', () => syncTabWithHash(true), { once: true });
+    </script>
+  </body>
+</html>
