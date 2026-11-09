@@ -23,7 +23,7 @@ const RegistrationSchema = new mongoose.Schema({
     collegeId: String,
     cart: Array,
     billing: Object,
-    paymentStatus: { type: String, default: "Pending" }, // Will update to Paid later
+    paymentStatus: { type: String, default: "Pending" }, // Will update to Paid after checkout
     createdAt: { type: Date, default: Date.now }
 });
 
@@ -39,7 +39,7 @@ const razorpay = new Razorpay({
 app.get('/', (req, res) => res.status(200).send("Vortex Backend is Live and Running! 🚀"));
 app.get('/api/test', (req, res) => res.status(200).send("API routing is working perfectly! ✅"));
 
-// 1. Registration Route (Now actually saves to MongoDB)
+// 1. Registration Route (Saves to MongoDB)
 app.post('/api/register', async (req, res) => {
     try {
         const data = req.body;
@@ -64,6 +64,8 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/create-order', async (req, res) => {
     try {
         const { amount } = req.body;
+        
+        // Razorpay expects the amount in PAISE (₹1 = 100 paise)
         const options = {
             amount: Math.round(amount * 100), 
             currency: "INR",
@@ -72,6 +74,7 @@ app.post('/api/create-order', async (req, res) => {
 
         const order = await razorpay.orders.create(options);
         res.status(200).json({ success: true, order });
+
     } catch (error) {
         console.error("Razorpay Error:", error);
         res.status(500).json({ success: false, message: "Failed to create order" });
