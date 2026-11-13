@@ -31,8 +31,8 @@ const Registration = mongoose.models.Registration || mongoose.model('Registratio
 
 // Initialize Razorpay
 const razorpay = new Razorpay({
-    key_id: process.env.rzp_test_Ty6feL7TwmtMIm,
-    key_secret: process.env.tCrhnjc1i5ic33p3h0TyAPqY
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 // Health Checks
