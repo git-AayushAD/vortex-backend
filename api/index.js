@@ -8,12 +8,16 @@ const app = express();
 app.use(cors({ origin: '*' })); 
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("MongoDB Connected Successfully!"))
-    .catch(err => console.error("MongoDB Connection Failed:", err));
+// 1. Serverless MongoDB Connection Function
+const connectDB = async () => {
+    if (mongoose.connections[0].readyState) {
+        return; // Use existing connection if already awake
+    }
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB Connected Successfully!");
+};
 
-// Define what a student's data looks like
+// 2. Define Student Blueprint
 const RegistrationSchema = new mongoose.Schema({
     name: String,
     phone: String,
@@ -23,29 +27,20 @@ const RegistrationSchema = new mongoose.Schema({
     collegeId: String,
     cart: Array,
     billing: Object,
-    paymentStatus: { type: String, default: "Pending" }, // Will update to Paid after checkout
+    paymentStatus: { type: String, default: "Pending" }, 
     createdAt: { type: Date, default: Date.now }
 });
 
 const Registration = mongoose.models.Registration || mongoose.model('Registration', RegistrationSchema);
 
-// Initialize Razorpay
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-});
-
-// Health Checks
-app.get('/', (req, res) => res.status(200).send("Vortex Backend is Live and Running! 🚀"));
-app.get('/api/test', (req, res) => res.status(200).send("API routing is working perfectly! ✅"));
-
-// 1. Registration Route (Saves to MongoDB)
+// 3. Registration Route
 app.post('/api/register', async (req, res) => {
     try {
+        await connectDB(); // Wait for DB to fully connect FIRST
+        
         const data = req.body;
         console.log(`Saving Registration for: ${data.name}`);
         
-        // Save entry to database
         const newStudent = new Registration(data);
         const savedStudent = await newStudent.save();
 
@@ -60,12 +55,16 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// 2. Razorpay Order Creation Route
+// 4. Razorpay Order Route
 app.post('/api/create-order', async (req, res) => {
     try {
+        // Initialize Razorpay inside the route to securely catch env variables on demand
+        const razorpay = new Razorpay({
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_KEY_SECRET
+        });
+
         const { amount } = req.body;
-        
-        // Razorpay expects the amount in PAISE (₹1 = 100 paise)
         const options = {
             amount: Math.round(amount * 100), 
             currency: "INR",
