@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const Razorpay = require('razorpay');
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 require('dotenv').config();
 
 const app = express();
@@ -27,7 +28,9 @@ const RegistrationSchema = new mongoose.Schema({
     collegeId: String,
     cart: Array,
     billing: Object,
-    paymentStatus: { type: String, default: "Pending" }, 
+    paymentStatus: { type: String, default: "Pending" },
+    paymentId: String,
+    orderId: String,
     createdAt: { type: Date, default: Date.now }
 });
 
@@ -77,6 +80,45 @@ app.post('/api/create-order', async (req, res) => {
     } catch (error) {
         console.error("Razorpay Error:", error);
         res.status(500).json({ success: false, message: "Failed to create order" });
+    }
+});
+
+// 5. Payment Verification & DB Status Update Route
+app.post('/api/verify-payment', async (req, res) => {
+    try {
+        await connectDB();
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, email, phone } = req.body;
+
+        // Verify signature using Razorpay Key Secret
+        const body = razorpay_order_id + "|" + razorpay_payment_id;
+        const expectedSignature = crypto
+            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+            .update(body.toString())
+            .digest("hex");
+
+        if (expectedSignature !== razorpay_signature) {
+            return res.status(400).json({ success: false, message: "Invalid payment signature" });
+        }
+
+        // Update the student's latest pending record to Paid
+        const updatedStudent = await Registration.findOneAndUpdate(
+            { email, phone, paymentStatus: "Pending" },
+            {
+                paymentStatus: "Paid",
+                paymentId: razorpay_payment_id,
+                orderId: razorpay_order_id
+            },
+            { sort: { createdAt: -1 }, new: true }
+        );
+
+        res.status(200).json({ 
+            success: true, 
+            message: "Payment verified and DB updated", 
+            student: updatedStudent 
+        });
+    } catch (error) {
+        console.error("Verification Error:", error);
+        res.status(500).json({ success: false, message: "Failed to verify payment" });
     }
 });
 
