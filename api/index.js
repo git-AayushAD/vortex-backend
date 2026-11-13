@@ -27,7 +27,7 @@ const RegistrationSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-const Registration = mongoose.model('Registration', RegistrationSchema);
+const Registration = mongoose.models.Registration || mongoose.model('Registration', RegistrationSchema);
 
 // Initialize Razorpay
 const razorpay = new Razorpay({
